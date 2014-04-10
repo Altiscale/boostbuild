@@ -61,7 +61,10 @@ else
   echo "ok - downloading boost.tar.gz"
   wget --output-document=$(basename $boost_zip_file) "$boost_url"
 fi
-if [ -d boost ] ; then
+# Only applies to Boost installation, delete previous installationif exist.
+# This machine shouldn't have existing boost instllation.
+if [ -d $WORKSPACE/boost ] ; then
+  echo "warn - uninstalling previous version of Boost"
   rm -rf boost
   rm -rf /usr/local/lib/libboost_*
   if [ -d /usr/local/include/boost/ ] ; then
