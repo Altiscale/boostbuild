@@ -36,10 +36,6 @@ pushd `pwd`
 cd %{_builddir}/%{service_name}/
 
 ./bootstrap.sh
-if [ $? -ne "0" ] ; then
-  echo "fatal - build boost failed, exiting"
-  exit -8
-fi
 
 popd
 
