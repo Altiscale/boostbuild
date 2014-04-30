@@ -97,12 +97,14 @@ mkdir -p $WORKSPACE/rpmbuild/{BUILD,BUILDROOT,RPMS,SPECS,SOURCES,SRPMS}/
 cp "$yourcomponent_spec" $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec
 
 # If you are only applying the %prep stage, you can manually copy the folders you need.
-cp -r $WORKSPACE/$yourcomponent $WORKSPACE/rpmbuild/SOURCES/alti-$yourcomponent
+cp -r $WORKSPACE/$yourcomponent $WORKSPACE/rpmbuild/SOURCES/$yourcomponent
 
 # Otherwise, if you are using %setup, you may want to copy the tar.gz created before
 # cp -r $WORKSPACE/alti-${yourcomponent}.tar.gz $WORKSPACE/rpmbuild/SOURCES/
 
-cp $WORKSPACE/patches/* $WORKSPACE/rpmbuild/SOURCES/
+if [ "$(ls -A $WORKSPACE/patches/)" ]; then
+  cp $WORKSPACE/patches/* $WORKSPACE/rpmbuild/SOURCES/
+fi
 # Explicitly define IMPALA_HOME here for build purpose
 rpmbuild -vv -ba $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec --define "_topdir $WORKSPACE/rpmbuild" --buildroot $WORKSPACE/rpmbuild/BUILDROOT/
 

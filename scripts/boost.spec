@@ -1,9 +1,10 @@
 %define major_ver %(echo ${YOURCOMPONENT_VERSION})
 %define service_name boost
+%define build_release %(echo ${BUILD_TIME})
 
 Name: %{service_name}
 Version: %{major_ver}
-Release: 0
+Release: %{build_release}%{?dist}
 Summary: BOOST (An Optimizing Compiler Infrastructure)
 License: http://www.boost.org/users/license.html
 Vendor: None (open source)
@@ -34,8 +35,7 @@ cp -r %{_sourcedir}/%{service_name} %{_builddir}/
 %build
 pushd `pwd`
 cd %{_builddir}/%{service_name}/
-
-./bootstrap.sh
+./bootstrap.sh --prefix=%{buildroot}/usr/local --exec-prefix=%{buildroot}/usr/local
 
 popd
 
@@ -44,8 +44,8 @@ rm -rf %{buildroot}
 cd %{_builddir}/%{service_name}/
 ./bjam --layout=tagged install
 
-ln -s /usr/local/lib/libboost_date_time-mt.a /usr/local/lib/libboost_date_time.a
-ln -s /usr/local/lib/libboost_date_time-mt.so /usr/local/lib/libboost_date_time.so
+#ln -s /usr/local/lib/libboost_date_time-mt.a /usr/local/lib/libboost_date_time.a
+#ln -s /usr/local/lib/libboost_date_time-mt.so /usr/local/lib/libboost_date_time.so
 
 %clean
 rm -rf %{buildroot}
@@ -56,12 +56,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-, root, root)
-%doc CREDITS.TXT LICENSE.TXT README.txt docs/*.{html,css,gif,jpg} docs/CommandGuide
-%{_bindir}/*
-%{_libdir}/*.o
-%{_libdir}/*.a
-%{_libdir}/*.so
-%{_includedir}/boost
+/usr/local/lib/*
+/usr/local/include/boost
 
 %changelog
 * Wed Apr 09 2015 Andrew Lee
