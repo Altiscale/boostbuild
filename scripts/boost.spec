@@ -14,6 +14,12 @@ Source: %{_sourcedir}/%{service_name}
 BuildRoot: %{_tmppath}/%{name}-root
 Requires: /sbin/ldconfig
 BuildRequires: gcc >= 3.4
+BuildRequires: autoconf >= 2.63
+BuildRequires: automake >= 1.11.1
+BuildRequires: python-devel >= 2.6.6
+BuildRequires: bzip2-devel >= 1.0.5
+BuildRequires: zlib-devel >= 1.2.3
+BuildRequires: kernel-devel >= 2.6.32
 
 %description
 BOOST is a compiler infrastructure designed for compile-time, link-time, runtime,
@@ -44,8 +50,8 @@ rm -rf %{buildroot}
 cd %{_builddir}/%{service_name}/
 ./bjam --layout=tagged install
 
-#ln -s /usr/local/lib/libboost_date_time-mt.a /usr/local/lib/libboost_date_time.a
-#ln -s /usr/local/lib/libboost_date_time-mt.so /usr/local/lib/libboost_date_time.so
+ln -s /usr/local/lib/libboost_date_time-mt.a /usr/local/lib/libboost_date_time.a
+ln -s /usr/local/lib/libboost_date_time-mt.so /usr/local/lib/libboost_date_time.so
 
 %clean
 rm -rf %{buildroot}
