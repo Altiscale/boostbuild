@@ -109,9 +109,9 @@ popd
 # Otherwise, if you are using %setup, you may want to copy the tar.gz created before
 # cp -r $WORKSPACE/alti-${yourcomponent}.tar.gz $WORKSPACE/rpmbuild/SOURCES/
 
-if [ "$(ls -A $WORKSPACE/patches/)" ]; then
-  cp $WORKSPACE/patches/* $WORKSPACE/rpmbuild/SOURCES/
-fi
+#if [ "$(ls -A $WORKSPACE/patches/)" ]; then
+#  cp $WORKSPACE/patches/* $WORKSPACE/rpmbuild/SOURCES/
+#fi
 
 # Explicitly define IMPALA_HOME here for build purpose
 rpmbuild -vv -bs $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec 
