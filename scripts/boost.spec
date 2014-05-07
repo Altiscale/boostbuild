@@ -1,6 +1,6 @@
-%define major_ver %(echo ${YOURCOMPONENT_VERSION})
+%define major_ver 1.46.1
 %define service_name boost
-%define build_release %(echo ${BUILD_TIME})
+%define build_release 20140506
 
 Name: %{service_name}
 Version: %{major_ver}
@@ -10,7 +10,7 @@ License: http://www.boost.org/users/license.html
 Vendor: None (open source)
 Group: Development/Compilers
 URL: http://boost.org/
-Source: %{_sourcedir}/%{service_name}
+Source: %{_sourcedir}/%{service_name}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-root
 Requires: /sbin/ldconfig
 BuildRequires: gcc >= 3.4
@@ -33,25 +33,28 @@ functionality.
 
 %prep
 # copying files into BUILD/impala/ e.g. BUILD/impala/* 
-echo "ok - copying files from %{_sourcedir} to folder  %{_builddir}/%{service_name}"
-cp -r %{_sourcedir}/%{service_name} %{_builddir}/
+echo "ok - copying files from %{_sourcedir} to folder %{_builddir}/%{service_name}"
+#pushd %{_sourcedir}
+#tar -xzf %{service_name}.tar.gz
+#cp -r %{_sourcedir}/%{service_name} %{_builddir}/
+#popd
 
-#%setup -q -n BOOST-3.3
+%setup -q -n %{service_name}
 
 %build
-pushd `pwd`
+#pushd `pwd`
 cd %{_builddir}/%{service_name}/
 ./bootstrap.sh --prefix=%{buildroot}/usr/local --exec-prefix=%{buildroot}/usr/local
 
-popd
+#popd
 
 %install
 rm -rf %{buildroot}
 cd %{_builddir}/%{service_name}/
 ./bjam --layout=tagged install
 
-ln -s /usr/local/lib/libboost_date_time-mt.a /usr/local/lib/libboost_date_time.a
-ln -s /usr/local/lib/libboost_date_time-mt.so /usr/local/lib/libboost_date_time.so
+#ln -s /usr/local/lib/libboost_date_time-mt.a /usr/local/lib/libboost_date_time.a
+#ln -s /usr/local/lib/libboost_date_time-mt.so /usr/local/lib/libboost_date_time.so
 
 %clean
 rm -rf %{buildroot}

@@ -71,7 +71,7 @@ if [ -d $WORKSPACE/boost ] ; then
     rm -rf /usr/local/include/boost/
   fi
 fi
-tar -xvzf boost.tar.gz
+tar -xzf boost.tar.gz
 mv boost_* boost
 
 echo "ok - switching to component=$yourcomponent and checking out the files"
@@ -98,6 +98,13 @@ cp "$yourcomponent_spec" $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec
 
 # If you are only applying the %prep stage, you can manually copy the folders you need.
 cp -r $WORKSPACE/$yourcomponent $WORKSPACE/rpmbuild/SOURCES/$yourcomponent
+pushd "$WORKSPACE/rpmbuild/SOURCES/"
+pwd
+tar -czf $yourcomponent.tar.gz $yourcomponent
+echo "ok - created $yourcomponent.tar.gz"
+stat "$yourcomponent.tar.gz"
+mv "$yourcomponent.tar.gz" "$WORKSPACE/rpmbuild/SOURCES/"
+popd
 
 # Otherwise, if you are using %setup, you may want to copy the tar.gz created before
 # cp -r $WORKSPACE/alti-${yourcomponent}.tar.gz $WORKSPACE/rpmbuild/SOURCES/
@@ -105,11 +112,19 @@ cp -r $WORKSPACE/$yourcomponent $WORKSPACE/rpmbuild/SOURCES/$yourcomponent
 if [ "$(ls -A $WORKSPACE/patches/)" ]; then
   cp $WORKSPACE/patches/* $WORKSPACE/rpmbuild/SOURCES/
 fi
+
 # Explicitly define IMPALA_HOME here for build purpose
-rpmbuild -vv -ba $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec --define "_topdir $WORKSPACE/rpmbuild" --buildroot $WORKSPACE/rpmbuild/BUILDROOT/
+rpmbuild -vv -bs $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec 
+if [ $? -ne "0" ] ; then
+  echo "fail - SRPM build for $yourcomponent.src.rpm failed"
+  exit -8
+fi
+
+mock -vvv --resultdir=$WORKSPACE/rpmbuild/RPMS/ --rebuild $WORKSPACE/rpmbuild/SRPMS/$yourcomponent-$YOURCOMPONENT_VERSION-*.src.rpm 
 
 if [ $? -ne "0" ] ; then
-  echo "fail - RPM build for $yourcomponent failed"
+  echo "fail - mock RPM build for $yourcomponent failed"
+  exit -9
 fi
 
 popd
