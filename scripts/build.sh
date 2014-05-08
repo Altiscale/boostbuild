@@ -114,7 +114,9 @@ popd
 #fi
 
 # Explicitly define IMPALA_HOME here for build purpose
-rpmbuild -vv -bs $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec 
+rpmbuild -vv -bs $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec \
+         --define "_topdir $WORKSPACE/rpmbuild"
+
 if [ $? -ne "0" ] ; then
   echo "fail - SRPM build for $yourcomponent.src.rpm failed"
   exit -8
