@@ -1,6 +1,6 @@
-%define major_ver 1.46.1
+%define major_ver YOURCOMPONENT_VERSION
 %define service_name boost
-%define build_release 20140506
+%define build_release BUILD_TIME
 
 Name: %{service_name}
 Version: %{major_ver}
@@ -34,6 +34,7 @@ functionality.
 %prep
 # copying files into BUILD/impala/ e.g. BUILD/impala/* 
 echo "ok - copying files from %{_sourcedir} to folder %{_builddir}/%{service_name}"
+echo "ok - version is %{major_ver} with release number %{build_release}"
 #pushd %{_sourcedir}
 #tar -xzf %{service_name}.tar.gz
 #cp -r %{_sourcedir}/%{service_name} %{_builddir}/

@@ -114,6 +114,9 @@ popd
 #fi
 
 # Explicitly define IMPALA_HOME here for build purpose
+echo "ok - applying version number $YOURCOMPONENT_VERSION and release number $BUILD_TIME"
+sed -i "s/YOURCOMPONENT_VERSION/$YOURCOMPONENT_VERSION/g" "$WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec"
+sed -i "s/BUILD_TIME/$BUILD_TIME/g" "$WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec"
 rpmbuild -vv -bs $WORKSPACE/rpmbuild/SPECS/$yourcomponent.spec \
          --define "_topdir $WORKSPACE/rpmbuild"
 
@@ -122,7 +125,8 @@ if [ $? -ne "0" ] ; then
   exit -8
 fi
 
-mock -vvv --resultdir=$WORKSPACE/rpmbuild/RPMS/ --rebuild $WORKSPACE/rpmbuild/SRPMS/$yourcomponent-$YOURCOMPONENT_VERSION-*.src.rpm 
+mock -vvv --resultdir=$WORKSPACE/rpmbuild/RPMS/ \
+          --rebuild $WORKSPACE/rpmbuild/SRPMS/$yourcomponent-$YOURCOMPONENT_VERSION-*.src.rpm
 
 if [ $? -ne "0" ] ; then
   echo "fail - mock RPM build for $yourcomponent failed"
