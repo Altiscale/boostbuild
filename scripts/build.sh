@@ -139,7 +139,7 @@ sed "s:BASEDIR:$WORKSPACE:g" "$mock_cfg" > "$curr_dir/$mock_cfg_runtime"
 sed -i "s:YOURCOMPONENT_VERSION:$YOURCOMPONENT_VERSION:g" "$curr_dir/$mock_cfg_runtime"
 echo "ok - applying mock config $curr_dir/$mock_cfg_runtime"
 cat "$curr_dir/$mock_cfg_runtime"
-mock -vvv --configdir=$curr_dir -r altiscale-llvm-centos-6-x86_64.runtime \
+mock -vvv --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime \
           --resultdir=$WORKSPACE/rpmbuild/RPMS/ \
           --rebuild $WORKSPACE/rpmbuild/SRPMS/$yourcomponent-$YOURCOMPONENT_VERSION-*.src.rpm
 
