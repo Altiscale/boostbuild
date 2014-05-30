@@ -8,6 +8,9 @@ setup_host="$curr_dir/setup_host.sh"
 # Define the version of your component in setup_env.sh
 yourcomponent=boost
 yourcomponent_spec="$curr_dir/${yourcomponent}.spec"
+mock_cfg="$curr_dir/altiscale-boost-centos-6-x86_64.cfg"
+mock_cfg_name=$(basename "$mock_cfg")
+mock_cfg_runtime=`echo $mock_cfg_name | sed "s/.cfg/.runtime.cfg/"`
 
 boost_zip_file="$WORKSPACE/boost.tar.gz"
 boost_url="http://downloads.sourceforge.net/project/boost/boost/1.46.1/boost_1_46_1.tar.gz"
@@ -125,15 +128,34 @@ if [ $? -ne "0" ] ; then
   exit -8
 fi
 
-mock -vvv --resultdir=$WORKSPACE/rpmbuild/RPMS/ \
+echo "ok - applying $WORKSPACE for the new BASEDIR for mock, pattern delimiter here should be :"
+# the path includeds /, so we need a diff pattern delimiter
+
+mkdir -p "$WORKSPACE/var/lib/mock"
+chmod 2755 "$WORKSPACE/var/lib/mock"
+mkdir -p "$WORKSPACE/var/cache/mock"
+chmod 2755 "$WORKSPACE/var/cache/mock"
+sed "s:BASEDIR:$WORKSPACE:g" "$mock_cfg" > "$curr_dir/$mock_cfg_runtime"
+sed -i "s:YOURCOMPONENT_VERSION:$YOURCOMPONENT_VERSION:g" "$curr_dir/$mock_cfg_runtime"
+echo "ok - applying mock config $curr_dir/$mock_cfg_runtime"
+cat "$curr_dir/$mock_cfg_runtime"
+mock -vvv --configdir=$curr_dir -r altiscale-llvm-centos-6-x86_64.runtime \
+          --resultdir=$WORKSPACE/rpmbuild/RPMS/ \
           --rebuild $WORKSPACE/rpmbuild/SRPMS/$yourcomponent-$YOURCOMPONENT_VERSION-*.src.rpm
 
 if [ $? -ne "0" ] ; then
   echo "fail - mock RPM build for $yourcomponent failed"
+  mock --clean
+  mock --scrub=all
   exit -9
 fi
 
+mock --clean
+mock --scrub=all
+
 popd
+
+
 
 echo "ok - build Completed successfully!"
 
