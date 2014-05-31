@@ -145,12 +145,12 @@ mock -vvv --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime \
 
 if [ $? -ne "0" ] ; then
   echo "fail - mock RPM build for $yourcomponent failed"
-  mock --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime --clean
+  # mock --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime --clean
   mock --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime --scrub=all
   exit -9
 fi
 
-mock --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime --clean
+# mock --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime --clean
 mock --configdir=$curr_dir -r altiscale-boost-centos-6-x86_64.runtime --scrub=all
 
 popd
